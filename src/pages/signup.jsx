@@ -1,7 +1,10 @@
+import axios from "axios";
 import React, { useState } from "react";
-import { registerUser } from "../utils/userService";
+import { unstable_HistoryRouter, useNavigate } from "react-router-dom";
 
 const Signup = () => {
+  const history = useNavigate();
+
   const [user, setUser] = useState({
     name: "",
     email: "",
@@ -10,13 +13,26 @@ const Signup = () => {
   });
   const [error, setError] = useState(false);
 
+  const signUp = async (user) => {
+    const post = await axios.post("http://localhost:3000/user", {
+      name: user.name,
+      email: user.email,
+      password: user.password,
+    });
+
+    return post;
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (user.password !== user.confirm_password) return setError(true);
 
-    const reg = await registerUser(user);
-    console.log(reg);
+    const data = await signUp(user);
+    console.log(data);
+
+    if (data.status == 200) {
+      history("/home");
+    }
   };
 
   const handleChange = (e) => {

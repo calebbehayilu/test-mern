@@ -8,8 +8,10 @@ const auth = require("../middleware/auth");
 route.use(express.json());
 
 route.get("/me", auth, async (req, res) => {
-  const user = await User.find();
-  console.log(user);
+  const data = req.user;
+
+  const user = await User.find({ _id: data.id });
+  console.log(data);
   res.send(user);
 });
 

@@ -26,7 +26,7 @@ route.post("/", async (req, res) => {
 });
 
 async function generateToken(user) {
-  const token = jwt.sign({ id: user._id }, "keyjson");
+  const token = jwt.sign({ id: user._id, user: user.name }, "keyjson");
   return token;
 }
 
