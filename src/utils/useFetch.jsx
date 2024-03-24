@@ -20,6 +20,7 @@ const useFetch = (url) => {
           // error coming back from server
           throw Error("could not fetch the data for that resource");
         }
+
         setIsPending(false);
         setData(res.data);
         setError(null);

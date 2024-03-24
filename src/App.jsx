@@ -7,8 +7,9 @@ import Signup from "./pages/signup";
 import Welcome from "./pages/welcome";
 import Home from "./pages/home";
 import Logout from "./pages/logout";
-import { getCurrentUser } from "./utils/auth";
 import Profile from "./pages/profile";
+import NotFound from "./pages/notfound";
+import { getCurrentUser } from "./utils/auth";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -28,6 +29,7 @@ function App() {
         <Route path="/logout" element={<Logout />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/" element={<Home />} exact />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   );

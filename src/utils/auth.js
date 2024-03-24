@@ -2,17 +2,20 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
 export async function login(user) {
-  const post = await axios.post("http://localhost:3000/auth", {
-    email: user.email,
-    password: user.password,
-  });
+  try {
+    const post = await axios.post("http://localhost:3000/auth", {
+      email: user.email,
+      password: user.password,
+    });
 
-  if (post.status == 200) {
-    localStorage.setItem("token", post.data);
-    window.location = "/home";
+    if (post.status == 200) {
+      localStorage.setItem("token", post.data);
+      window.location = "/home";
+    }
+    return post;
+  } catch (error) {
+    return error;
   }
-
-  return post;
 }
 
 export function logout() {
