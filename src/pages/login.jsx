@@ -1,8 +1,13 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { unstable_HistoryRouter, useNavigate } from "react-router-dom";
+import {
+  Navigate,
+  unstable_HistoryRouter,
+  useNavigate,
+} from "react-router-dom";
+import { login } from "../utils/auth";
 
-const Login = () => {
+const Login = ({ currentUser }) => {
   const history = useNavigate();
 
   const [error, setError] = useState(false);
@@ -11,27 +16,11 @@ const Login = () => {
     password: "",
   });
 
-  const signUp = async (user) => {
-    const post = await axios.post("http://localhost:3000/auth", {
-      name: user.name,
-      email: user.email,
-      password: user.password,
-    });
-
-    return post;
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (user.password == "") return setError(true);
-
-    const data = await signUp(user);
-
-    if (data.status == 200) {
-      localStorage.setItem("token", data.data);
-      window.location = "/home";
-    }
+    await login(user);
   };
 
   const handleChange = (e) => {
@@ -39,7 +28,7 @@ const Login = () => {
     const { name, value } = e.target;
     setUser({ ...user, [name]: value });
   };
-
+  if (currentUser) return <Navigate to="/home" />;
   return (
     <div>
       <div className="flex flex-col justify-center items-center m-5">

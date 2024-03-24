@@ -10,8 +10,7 @@ route.use(express.json());
 route.get("/me", auth, async (req, res) => {
   const data = req.user;
 
-  const user = await User.find({ _id: data.id });
-  console.log(data);
+  const user = await User.find({ _id: data.id }).select("-password");
   res.send(user);
 });
 
