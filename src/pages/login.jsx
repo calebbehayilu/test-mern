@@ -4,6 +4,7 @@ import { login } from "../utils/auth";
 import Error from "../components/error";
 import { IoMdMail } from "react-icons/io";
 import { IoKey } from "react-icons/io5";
+import GoogleSignup from "../components/google-signup";
 
 const Login = ({ currentUser }) => {
   const [error, setError] = useState({
@@ -43,10 +44,11 @@ const Login = ({ currentUser }) => {
   if (currentUser) return <Navigate to="/home" />;
 
   return (
-    <div>
-      <div className="flex flex-col justify-center items-center m-5">
-        <h1 className="text-2xl m-2">Login</h1>
-        <form className="flex flex-col w-96 gap-2" onSubmit={handleSubmit}>
+    <div className=" flex flex-col justify-center items-center m-5">
+      <div className="min-w-fit">
+        <h1 className="text-2xl m-2 text-center">Login</h1>
+
+        <form className="flex flex-col w-96 gap-2 pb-2" onSubmit={handleSubmit}>
           {error.caught && <Error error={error.cause} />}
 
           <label className="input input-bordered flex items-center gap-2">
@@ -77,6 +79,9 @@ const Login = ({ currentUser }) => {
             Login
           </button>
         </form>
+
+        <div className="divider "></div>
+        <GoogleSignup />
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+const jwt = require("jsonwebtoken");
 const express = require("express");
 const route = express();
 const bcrypt = require("bcrypt");
@@ -14,6 +15,29 @@ route.get("/me", auth, async (req, res) => {
   res.send(user);
 });
 
+route.post("/signUp-with-google", async (req, res) => {
+  const body = await req.body;
+
+  let user = await User.findOne({ email: body.email, uid: body.uid });
+  if (!user) {
+    user = User(body);
+    await user.save();
+
+    const token = await generateToken(user);
+
+    return res
+      .header("x-auth-token", token)
+      .header("access-control-expose-headers", "x-auth-token")
+      .send(user);
+  }
+
+  const token = await generateToken(user);
+
+  res
+    .header("x-auth-token", token)
+    .header("access-control-expose-headers", "x-auth-token")
+    .send(user);
+});
 route.post("/", async (req, res) => {
   const body = await req.body;
 
@@ -29,9 +53,17 @@ route.post("/", async (req, res) => {
   user.password = await bcrypt.hash(user.password, salt);
 
   await user.save();
-  res.send(user);
+  const token = await generateToken(user);
+  res
+    .header("x-auth-token", token)
+    .header("access-control-expose-headers", "x-auth-token")
+    .send(user);
 });
 
+async function generateToken(user) {
+  const token = jwt.sign({ id: user._id, user: user.name }, "keyjson");
+  return token;
+}
 function validate(body) {
   const schema = Joi.object({
     name: Joi.string().min(3).max(30).required(),
@@ -44,6 +76,7 @@ function validate(body) {
       .min(6)
       .max(30)
       .required(),
+    uid: Joi.string().min(3).required(),
   });
 
   return schema.validate(body);
